@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Мой календарь</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- ===== DESKTOP ===== -->
+<div class="app-wrapper">
+  <div class="desktop-container">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+          <line x1="16" y1="2" x2="16" y2="6"/>
+          <line x1="8" y1="2" x2="8" y2="6"/>
+          <line x1="3" y1="10" x2="21" y2="10"/>
+        </svg>
+        Мой календарь
+      </div>
+
+      <a href="index.html" class="sidebar-nav-item active">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+          <line x1="16" y1="2" x2="16" y2="6"/>
+          <line x1="8" y1="2" x2="8" y2="6"/>
+          <line x1="3" y1="10" x2="21" y2="10"/>
+        </svg>
+        Календарь
+      </a>
+
+      <a href="#" class="sidebar-nav-item" onclick="return false;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <polyline points="12 6 12 12 16 14"/>
+        </svg>
+        События
+      </a>
+
+      <a href="#" class="sidebar-nav-item" onclick="return false;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+          <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+        </svg>
+        Напоминания
+      </a>
+
+      <a href="#" class="sidebar-nav-item" onclick="return false;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/>
+          <path d="M21 12h-1M4 12H3M12 21v-1M12 4V3"/>
+        </svg>
+        Настройки
+      </a>
+    </aside>
+
+    <!-- Calendar View -->
+    <div class="main-content" id="desktopCalendar">
+      <div class="calendar-header">
+        <div class="calendar-nav">
+          <button class="nav-btn" id="prevMonthBtn" onclick="changeMonth(-1)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <span class="month-title" id="desktopMonthTitle">Май 2026</span>
+          <button class="nav-btn" id="nextMonthBtn" onclick="changeMonth(1)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
+        <div class="header-right">
+          <button class="today-btn" onclick="goToToday()">Сегодня</button>
+          <button class="add-event-btn" onclick="openNewEventDesktop()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Добавить событие
+          </button>
+        </div>
+      </div>
+
+      <div style="padding:0 28px;">
+        <div class="view-tabs">
+          <button class="view-tab">День</button>
+          <button class="view-tab">Неделя</button>
+          <button class="view-tab active">Месяц</button>
+        </div>
+      </div>
+
+      <div class="calendar-grid-wrapper">
+        <div class="calendar-weekdays">
+          <div class="weekday-label">Пн</div>
+          <div class="weekday-label">Вт</div>
+          <div class="weekday-label">Ср</div>
+          <div class="weekday-label">Чт</div>
+          <div class="weekday-label">Пт</div>
+          <div class="weekday-label">Сб</div>
+          <div class="weekday-label">Вс</div>
+        </div>
+        <div class="calendar-days" id="desktopCalendarDays"></div>
+      </div>
+    </div>
+
+    <!-- Event Editor (Desktop) -->
+    <div class="main-content" id="desktopEditor" style="display:none;">
+      <div class="event-editor">
+        <div class="editor-header">
+          <button class="editor-back-btn" onclick="closeDesktopEditor()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            Событие
+          </button>
+          <div class="editor-actions">
+            <button class="btn-delete" onclick="closeDesktopEditor()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+              Удалить
+            </button>
+            <button class="btn-save" onclick="saveEvent()">Сохранить</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Название события</label>
+          <div class="form-input-icon">
+            <input class="form-input" type="text" id="desktopEventName" placeholder="Введите название" />
+          </div>
+        </div>
+
+        <div class="form-row-3" style="margin-bottom:20px;">
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label">Дата</label>
+            <div class="form-input-icon">
+              <input class="form-input" type="text" id="desktopEventDate" placeholder="дд.мм.гггг" />
+              <span class="icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              </span>
+            </div>
+          </div>
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label">Время начала</label>
+            <div class="form-input-icon">
+              <input class="form-input" type="text" id="desktopEventStart" placeholder="чч:мм" />
+              <span class="icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              </span>
+            </div>
+          </div>
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label">Время окончания</label>
+            <div class="form-input-icon">
+              <input class="form-input" type="text" id="desktopEventEnd" placeholder="чч:мм" />
+              <span class="icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row" style="margin-bottom:20px;">
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label">Повторение</label>
+            <select class="form-select">
+              <option>Каждую неделю</option>
+              <option>Никогда</option>
+              <option>Каждый день</option>
+              <option>Каждый месяц</option>
+              <option>Каждый год</option>
+            </select>
+          </div>
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label">Напоминание</label>
+            <select class="form-select">
+              <option>За 30 минут</option>
+              <option>За 10 минут</option>
+              <option>За 1 час</option>
+              <option>За 1 день</option>
+              <option>Без напоминания</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Описание</label>
+          <textarea class="form-textarea" id="desktopEventDesc" placeholder="Добавьте описание..."></textarea>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ===== MOBILE ===== -->
+<div class="mobile-wrapper">
+  <div class="mobile-phone">
+
+    <!-- CALENDAR PAGE -->
+    <div id="mobileCalendarPage" style="display:flex;flex-direction:column;flex:1;">
+
+      <!-- Status bar -->
+      <div class="status-bar">
+        <span style="font-weight:700;">9:41</span>
+        <div class="status-icons">
+          <svg width="16" height="11" viewBox="0 0 16 11" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="0.5"/><rect x="4.5" y="5" width="3" height="6" rx="0.5"/><rect x="9" y="2.5" width="3" height="8.5" rx="0.5"/><rect x="13.5" y="0" width="2.5" height="11" rx="0.5" opacity="0.3"/></svg>
+          <svg width="15" height="11" viewBox="0 0 15 11" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7.5 2.5C9.5 2.5 11.3 3.3 12.6 4.6"/><path d="M2.4 4.6C3.7 3.3 5.5 2.5 7.5 2.5"/><path d="M4.9 7C5.8 6.1 6.9 5.5 8.1 5.5"/><path d="M10.1 7C9.2 6.1 8.1 5.5 6.9 5.5"/><circle cx="7.5" cy="9.5" r="1" fill="currentColor" stroke="none"/></svg>
+          <svg width="25" height="12" viewBox="0 0 25 12" fill="currentColor"><rect x="0.5" y="0.5" width="21" height="11" rx="3.5" stroke="currentColor" stroke-opacity="0.35" fill="none"/><rect x="2" y="2" width="18" height="8" rx="2"/><path d="M23 4v4a2 2 0 0 0 0-4z" opacity="0.4"/></svg>
+        </div>
+      </div>
+
+      <!-- Mobile header -->
+      <div class="mobile-header">
+        <button class="hamburger-btn">
+          <span></span><span></span><span></span>
+        </button>
+        <button class="mobile-month-btn" id="mobileMonthBtn">
+          Май 2026
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <button class="mobile-cal-btn">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        </button>
+      </div>
+
+      <!-- Mobile view tabs -->
+      <div class="mobile-view-tabs">
+        <button class="mobile-view-tab">День</button>
+        <button class="mobile-view-tab">Неделя</button>
+        <button class="mobile-view-tab active">Месяц</button>
+      </div>
+
+      <!-- Mobile calendar grid -->
+      <div class="mobile-cal-weekdays">
+        <div class="mobile-weekday">Пн</div>
+        <div class="mobile-weekday">Вт</div>
+        <div class="mobile-weekday">Ср</div>
+        <div class="mobile-weekday">Чт</div>
+        <div class="mobile-weekday">Пт</div>
+        <div class="mobile-weekday">Сб</div>
+        <div class="mobile-weekday">Вс</div>
+      </div>
+      <div class="mobile-cal-days" id="mobileCalendarDays"></div>
+
+      <!-- Events list -->
+      <div class="mobile-events-section">
+        <div class="mobile-events-title" id="mobileEventsTitle">События на 15 мая</div>
+        <div id="mobileEventsList">
+          <div class="mobile-event-item" onclick="openMobileEditor('Встреча с командой','15.05.2026','10:00','11:30','Обсудить текущие задачи и планы на неделю.')">
+            <div class="mobile-event-dot blue"></div>
+            <div class="mobile-event-info">
+              <div class="name">Встреча с командой</div>
+              <div class="time">10:00 — 11:30</div>
+            </div>
+          </div>
+          <div class="mobile-event-item" onclick="openMobileEditor('Обед с клиентом','15.05.2026','13:00','14:00','')">
+            <div class="mobile-event-dot cyan"></div>
+            <div class="mobile-event-info">
+              <div class="name">Обед с клиентом</div>
+              <div class="time">13:00 — 14:00</div>
+            </div>
+          </div>
+          <div class="mobile-event-item" onclick="openMobileEditor('Работа над проектом','15.05.2026','16:00','18:00','')">
+            <div class="mobile-event-dot green"></div>
+            <div class="mobile-event-info">
+              <div class="name">Работа над проектом</div>
+              <div class="time">16:00 — 18:00</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FAB -->
+      <button class="mobile-fab" onclick="openMobileEditor('','','','','')">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      </button>
+
+      <!-- Bottom nav -->
+      <nav class="mobile-bottom-nav">
+        <a href="index.html" class="mobile-nav-item active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Календарь
+          <div class="nav-indicator"></div>
+        </a>
+        <a href="#" class="mobile-nav-item" onclick="return false;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          События
+          <div class="nav-indicator"></div>
+        </a>
+        <a href="#" class="mobile-nav-item" onclick="return false;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          Напоминания
+          <div class="nav-indicator"></div>
+        </a>
+        <a href="#" class="mobile-nav-item" onclick="return false;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+          Настройки
+          <div class="nav-indicator"></div>
+        </a>
+      </nav>
+    </div>
+
+    <!-- MOBILE EDITOR PAGE (hidden by default) -->
+    <div id="mobileEditorPage" style="display:none;flex-direction:column;flex:1;">
+
+      <div class="status-bar">
+        <span style="font-weight:700;">9:41</span>
+        <div class="status-icons">
+          <svg width="16" height="11" viewBox="0 0 16 11" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="0.5"/><rect x="4.5" y="5" width="3" height="6" rx="0.5"/><rect x="9" y="2.5" width="3" height="8.5" rx="0.5"/><rect x="13.5" y="0" width="2.5" height="11" rx="0.5" opacity="0.3"/></svg>
+          <svg width="15" height="11" viewBox="0 0 15 11" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7.5 2.5C9.5 2.5 11.3 3.3 12.6 4.6"/><path d="M2.4 4.6C3.7 3.3 5.5 2.5 7.5 2.5"/><circle cx="7.5" cy="9.5" r="1" fill="currentColor" stroke="none"/></svg>
+          <svg width="25" height="12" viewBox="0 0 25 12" fill="currentColor"><rect x="0.5" y="0.5" width="21" height="11" rx="3.5" stroke="currentColor" stroke-opacity="0.35" fill="none"/><rect x="2" y="2" width="18" height="8" rx="2"/><path d="M23 4v4a2 2 0 0 0 0-4z" opacity="0.4"/></svg>
+        </div>
+      </div>
+
+      <div class="mobile-editor-header">
+        <button class="mobile-back-btn" onclick="closeMobileEditor()">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <span class="mobile-editor-title">Событие</span>
+        <button class="mobile-save-btn" onclick="closeMobileEditor()">Сохранить</button>
+      </div>
+
+      <div class="mobile-editor-body">
+
+        <div class="mobile-form-group">
+          <label class="mobile-form-label">Название события</label>
+          <input class="mobile-form-input" type="text" id="mobileEventName" placeholder="Введите название" />
+        </div>
+
+        <div class="mobile-form-group">
+          <label class="mobile-form-label">Дата</label>
+          <div class="mobile-form-input-icon">
+            <input class="mobile-form-input" type="text" id="mobileEventDate" placeholder="дд.мм.гггг" />
+            <span class="icon" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);color:#9CA3AF;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            </span>
+          </div>
+        </div>
+
+        <div class="mobile-form-row mobile-form-group">
+          <div>
+            <label class="mobile-form-label">Время начала</label>
+            <div style="position:relative;">
+              <input class="mobile-form-input" type="text" id="mobileEventStart" placeholder="чч:мм" style="padding-right:44px;" />
+              <span style="position:absolute;right:12px;top:50%;transform:translateY(-50%);color:#9CA3AF;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              </span>
+            </div>
+          </div>
+          <div>
+            <label class="mobile-form-label">Время окончания</label>
+            <div style="position:relative;">
+              <input class="mobile-form-input" type="text" id="mobileEventEnd" placeholder="чч:мм" style="padding-right:44px;" />
+              <span style="position:absolute;right:12px;top:50%;transform:translateY(-50%);color:#9CA3AF;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="mobile-form-group">
+          <label class="mobile-form-label">Повторение</label>
+          <select class="mobile-form-select">
+            <option>Каждую неделю</option>
+            <option>Никогда</option>
+            <option>Каждый день</option>
+            <option>Каждый месяц</option>
+            <option>Каждый год</option>
+          </select>
+        </div>
+
+        <div class="mobile-form-group">
+          <label class="mobile-form-label">Напоминание</label>
+          <select class="mobile-form-select">
+            <option>За 30 минут</option>
+            <option>За 10 минут</option>
+            <option>За 1 час</option>
+            <option>За 1 день</option>
+            <option>Без напоминания</option>
+          </select>
+        </div>
+
+        <div class="mobile-form-group">
+          <label class="mobile-form-label">Описание</label>
+          <textarea class="mobile-form-textarea" id="mobileEventDesc" placeholder="Добавьте описание..."></textarea>
+        </div>
+
+        <button class="mobile-delete-btn" onclick="closeMobileEditor()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+          Удалить событие
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ===== EVENTS DATA =====
+const events = {
+  '2026-05-15': [
+    { name: 'Встреча с командой', start: '10:00', end: '11:30', color: 'purple', desc: 'Обсудить текущие задачи и планы на неделю.' },
+    { name: 'Обед с клиентом', start: '13:00', end: '14:00', color: 'blue', desc: '' },
+    { name: 'Работа над проектом', start: '16:00', end: '18:00', color: 'green', desc: '' }
+  ],
+  '2026-05-16': [
+    { name: 'День рождения', start: '14:00', end: '16:00', color: 'yellow', desc: '' }
+  ],
+  '2026-05-19': [
+    { name: 'Тренировка', start: '16:00', end: '17:30', color: 'green', desc: '' }
+  ],
+  '2026-05-28': [
+    { name: 'Проект', start: '11:00', end: '13:00', color: 'blue', desc: '' }
+  ],
+  '2026-05-05': [
+    { name: 'Совещание', start: '09:00', end: '10:00', color: 'purple', desc: '' }
+  ]
+};
+
+// ===== CALENDAR STATE =====
+let currentYear = 2026;
+let currentMonth = 4; // 0-indexed, so 4 = May
+let selectedDate = '2026-05-15';
+
+const monthNames = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+
+function formatKey(y, m, d) {
+  return `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+}
+
+function formatDateRu(y, m, d) {
+  return `${String(d).padStart(2,'0')}.${String(m+1).padStart(2,'0')}.${y}`;
+}
+
+// ===== RENDER DESKTOP CALENDAR =====
+function renderDesktopCalendar() {
+  document.getElementById('desktopMonthTitle').textContent = `${monthNames[currentMonth]} ${currentYear}`;
+
+  const container = document.getElementById('desktopCalendarDays');
+  container.innerHTML = '';
+
+  const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+  const startOffset = firstDay === 0 ? 6 : firstDay - 1;
+  const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+  const daysInPrevMonth = new Date(currentYear, currentMonth, 0).getDate();
+
+  const today = new Date();
+  const todayKey = formatKey(today.getFullYear(), today.getMonth(), today.getDate());
+
+  // Prev month trailing days
+  for (let i = startOffset - 1; i >= 0; i--) {
+    const d = daysInPrevMonth - i;
+    const cell = createDesktopCell(d, true, false, null);
+    container.appendChild(cell);
+  }
+
+  // Current month
+  for (let d = 1; d <= daysInMonth; d++) {
+    const key = formatKey(currentYear, currentMonth, d);
+    const isToday = key === todayKey;
+    const isSelected = key === selectedDate;
+    const cell = createDesktopCell(d, false, isToday, key, isSelected);
+    container.appendChild(cell);
+  }
+
+  // Next month fill
+  const total = container.children.length;
+  const remaining = total % 7 === 0 ? 0 : 7 - (total % 7);
+  for (let d = 1; d <= remaining; d++) {
+    const cell = createDesktopCell(d, true, false, null);
+    container.appendChild(cell);
+  }
+}
+
+function createDesktopCell(day, isOther, isToday, key, isSelected) {
+  const cell = document.createElement('div');
+  cell.className = 'calendar-cell' + (isOther ? ' other-month' : '') + (isToday ? ' today' : '') + (isSelected ? ' selected' : '');
+
+  const num = document.createElement('div');
+  num.className = 'cell-number';
+  num.textContent = day;
+  cell.appendChild(num);
+
+  if (key && events[key]) {
+    events[key].slice(0, 2).forEach(ev => {
+      const chip = document.createElement('span');
+      chip.className = `event-chip ${ev.color}`;
+      chip.textContent = `${ev.name} ${ev.start}`;
+      chip.onclick = (e) => {
+        e.stopPropagation();
+        openDesktopEditor(ev, key);
+      };
+      cell.appendChild(chip);
+    });
+  }
+
+  if (!isOther && key) {
+    cell.onclick = () => {
+      selectedDate = key;
+      renderDesktopCalendar();
+    };
+  }
+
+  return cell;
+}
+
+// ===== RENDER MOBILE CALENDAR =====
+function renderMobileCalendar() {
+  document.getElementById('mobileMonthBtn').innerHTML = `${monthNames[currentMonth]} ${currentYear} <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>`;
+
+  const container = document.getElementById('mobileCalendarDays');
+  container.innerHTML = '';
+
+  const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+  const startOffset = firstDay === 0 ? 6 : firstDay - 1;
+  const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+  const daysInPrevMonth = new Date(currentYear, currentMonth, 0).getDate();
+
+  const today = new Date();
+  const todayKey = formatKey(today.getFullYear(), today.getMonth(), today.getDate());
+
+  for (let i = startOffset - 1; i >= 0; i--) {
+    const d = daysInPrevMonth - i;
+    container.appendChild(createMobileCell(d, true, false, null));
+  }
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const key = formatKey(currentYear, currentMonth, d);
+    const isToday = key === todayKey;
+    container.appendChild(createMobileCell(d, false, isToday, key));
+  }
+
+  const total = container.children.length;
+  const remaining = total % 7 === 0 ? 0 : 7 - (total % 7);
+  for (let d = 1; d <= remaining; d++) {
+    container.appendChild(createMobileCell(d, true, false, null));
+  }
+}
+
+function createMobileCell(day, isOther, isToday, key) {
+  const cell = document.createElement('div');
+  const dotColors = ['has-event-blue','has-event-cyan','has-event-green'];
+  let dotClass = '';
+  if (key && events[key]) {
+    const idx = Object.keys(events).indexOf(key) % dotColors.length;
+    dotClass = ' has-event ' + dotColors[idx];
+  }
+  cell.className = 'mobile-cell' + (isOther ? ' other-month' : '') + (isToday ? ' today' : '') + dotClass;
+
+  const num = document.createElement('div');
+  num.className = 'mobile-cell-num';
+  num.textContent = day;
+  cell.appendChild(num);
+
+  if (!isOther && key) {
+    cell.onclick = () => selectMobileDate(key, day);
+  }
+
+  return cell;
+}
+
+function selectMobileDate(key, day) {
+  selectedDate = key;
+  const parts = key.split('-');
+  document.getElementById('mobileEventsTitle').textContent = `События на ${day} ${monthNames[currentMonth].toLowerCase().slice(0,3)}`;
+  
+  const list = document.getElementById('mobileEventsList');
+  list.innerHTML = '';
+  
+  const dotMap = { purple:'blue', blue:'cyan', green:'green', yellow:'blue' };
+  
+  if (events[key]) {
+    events[key].forEach(ev => {
+      const item = document.createElement('div');
+      item.className = 'mobile-event-item';
+      const dotColor = dotMap[ev.color] || 'blue';
+      item.innerHTML = `
+        <div class="mobile-event-dot ${dotColor}"></div>
+        <div class="mobile-event-info">
+          <div class="name">${ev.name}</div>
+          <div class="time">${ev.start} — ${ev.end}</div>
+        </div>`;
+      item.onclick = () => openMobileEditor(ev.name, formatDateRu(...key.split('-').map(Number).map((v,i)=>i===1?v-1:v)), ev.start, ev.end, ev.desc || '');
+      list.appendChild(item);
+    });
+  } else {
+    list.innerHTML = '<div style="color:#9CA3AF;font-size:14px;padding:12px 0;">Нет событий</div>';
+  }
+}
+
+// ===== NAVIGATION =====
+function changeMonth(dir) {
+  currentMonth += dir;
+  if (currentMonth > 11) { currentMonth = 0; currentYear++; }
+  if (currentMonth < 0) { currentMonth = 11; currentYear--; }
+  renderDesktopCalendar();
+  renderMobileCalendar();
+}
+
+function goToToday() {
+  const today = new Date();
+  currentYear = today.getFullYear();
+  currentMonth = today.getMonth();
+  selectedDate = formatKey(currentYear, currentMonth, today.getDate());
+  renderDesktopCalendar();
+  renderMobileCalendar();
+}
+
+// ===== DESKTOP EDITOR =====
+function openDesktopEditor(ev, key) {
+  document.getElementById('desktopCalendar').style.display = 'none';
+  document.getElementById('desktopEditor').style.display = 'flex';
+
+  const parts = key.split('-');
+  document.getElementById('desktopEventName').value = ev.name;
+  document.getElementById('desktopEventDate').value = `${parts[2]}.${parts[1]}.${parts[0]}`;
+  document.getElementById('desktopEventStart').value = ev.start;
+  document.getElementById('desktopEventEnd').value = ev.end;
+  document.getElementById('desktopEventDesc').value = ev.desc || '';
+}
+
+function openNewEventDesktop() {
+  document.getElementById('desktopCalendar').style.display = 'none';
+  document.getElementById('desktopEditor').style.display = 'flex';
+  document.getElementById('desktopEventName').value = '';
+  document.getElementById('desktopEventDate').value = '';
+  document.getElementById('desktopEventStart').value = '';
+  document.getElementById('desktopEventEnd').value = '';
+  document.getElementById('desktopEventDesc').value = '';
+}
+
+function closeDesktopEditor() {
+  document.getElementById('desktopCalendar').style.display = 'flex';
+  document.getElementById('desktopEditor').style.display = 'none';
+}
+
+function saveEvent() {
+  closeDesktopEditor();
+}
+
+// ===== MOBILE EDITOR =====
+function openMobileEditor(name, date, start, end, desc) {
+  document.getElementById('mobileCalendarPage').style.display = 'none';
+  const editor = document.getElementById('mobileEditorPage');
+  editor.style.display = 'flex';
+  editor.style.flexDirection = 'column';
+
+  document.getElementById('mobileEventName').value = name;
+  document.getElementById('mobileEventDate').value = date;
+  document.getElementById('mobileEventStart').value = start;
+  document.getElementById('mobileEventEnd').value = end;
+  document.getElementById('mobileEventDesc').value = desc;
+}
+
+function closeMobileEditor() {
+  document.getElementById('mobileEditorPage').style.display = 'none';
+  document.getElementById('mobileCalendarPage').style.display = 'flex';
+}
+
+// ===== INIT =====
+renderDesktopCalendar();
+renderMobileCalendar();
+</script>
+
+</body>
+</html>
