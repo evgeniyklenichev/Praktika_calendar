@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Напоминания — Мой календарь</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-window">
+
+    <!-- SIDEBAR (Desktop) -->
+    <aside class="sidebar">
+      <a href="index.html" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="3"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Мой календарь
+      </a>
+      <a href="#" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="3"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Календарь
+      </a>
+      <a href="#" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/></svg>
+        События
+      </a>
+      <a href="napominaniya.html" class="nav-item active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        Напоминания
+      </a>
+      <a href="nastrojki.html" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        Настройки
+      </a>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+
+      <!-- Mobile header -->
+      <div class="mobile-header">
+        <button class="icon-btn" onclick="void(0)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <span class="mobile-title">Напоминания</span>
+        <button class="icon-btn" onclick="void(0)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </button>
+      </div>
+
+      <!-- Desktop header -->
+      <div class="page-header">
+        <h1 class="page-title">Напоминания</h1>
+        <button class="btn-primary" onclick="void(0)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Добавить напоминание
+        </button>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tabs">
+        <div class="tab active" onclick="switchTab(this, 'upcoming')">Предстоящие 5</div>
+        <div class="tab" onclick="switchTab(this, 'done')">Выполненные</div>
+        <div class="tab" onclick="switchTab(this, 'all')">Все</div>
+      </div>
+
+      <!-- Upcoming -->
+      <div id="upcoming" class="reminder-section reminder-list" style="margin-top:12px;">
+        <div class="reminder-item">
+          <input type="checkbox" class="reminder-check" />
+          <div class="reminder-info">
+            <div class="reminder-title">Подготовить презентацию</div>
+            <div class="reminder-meta">
+              <span>Сегодня, 10:00</span>
+              <span class="reminder-tag"><span class="dot dot-work"></span> Работа</span>
+            </div>
+          </div>
+          <svg class="reminder-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        </div>
+
+        <div class="reminder-item">
+          <input type="checkbox" class="reminder-check" />
+          <div class="reminder-info">
+            <div class="reminder-title">Встреча с командой</div>
+            <div class="reminder-meta">
+              <span>Сегодня, 14:00</span>
+              <span class="reminder-tag"><span class="dot dot-work"></span> Работа</span>
+            </div>
+          </div>
+          <svg class="reminder-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        </div>
+
+        <div class="reminder-item">
+          <input type="checkbox" class="reminder-check" />
+          <div class="reminder-info">
+            <div class="reminder-title">Тренировка</div>
+            <div class="reminder-meta">
+              <span>Сегодня, 18:00</span>
+              <span class="reminder-tag"><span class="dot dot-personal"></span> Личное</span>
+            </div>
+          </div>
+          <svg class="reminder-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        </div>
+
+        <div class="reminder-item">
+          <input type="checkbox" class="reminder-check" />
+          <div class="reminder-info">
+            <div class="reminder-title">Оплатить интернет</div>
+            <div class="reminder-meta">
+              <span>Завтра, 12:00</span>
+              <span class="reminder-tag"><span class="dot dot-personal"></span> Личное</span>
+            </div>
+          </div>
+          <svg class="reminder-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        </div>
+
+        <div class="reminder-item">
+          <input type="checkbox" class="reminder-check" />
+          <div class="reminder-info">
+            <div class="reminder-title">Купить продукты</div>
+            <div class="reminder-meta">
+              <span>12 мая, 17:00</span>
+              <span class="reminder-tag"><span class="dot dot-personal"></span> Личное</span>
+            </div>
+          </div>
+          <svg class="reminder-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        </div>
+      </div>
+
+      <!-- Done (hidden) -->
+      <div id="done" class="reminder-section reminder-list" style="margin-top:12px; display:none;">
+        <div style="text-align:center; padding: 40px 0; color: var(--text-muted); font-size:14px; font-weight:600;">
+          Нет выполненных напоминаний
+        </div>
+      </div>
+
+      <!-- All (hidden) -->
+      <div id="all" class="reminder-section reminder-list" style="margin-top:12px; display:none;">
+        <div class="reminder-item">
+          <input type="checkbox" class="reminder-check" />
+          <div class="reminder-info">
+            <div class="reminder-title">Подготовить презентацию</div>
+            <div class="reminder-meta"><span>Сегодня, 10:00</span><span class="reminder-tag"><span class="dot dot-work"></span> Работа</span></div>
+          </div>
+          <svg class="reminder-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        </div>
+        <div class="reminder-item">
+          <input type="checkbox" class="reminder-check" />
+          <div class="reminder-info">
+            <div class="reminder-title">Встреча с командой</div>
+            <div class="reminder-meta"><span>Сегодня, 14:00</span><span class="reminder-tag"><span class="dot dot-work"></span> Работа</span></div>
+          </div>
+          <svg class="reminder-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        </div>
+        <div class="reminder-item">
+          <input type="checkbox" class="reminder-check" />
+          <div class="reminder-info">
+            <div class="reminder-title">Тренировка</div>
+            <div class="reminder-meta"><span>Сегодня, 18:00</span><span class="reminder-tag"><span class="dot dot-personal"></span> Личное</span></div>
+          </div>
+          <svg class="reminder-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        </div>
+        <div class="reminder-item">
+          <input type="checkbox" class="reminder-check" />
+          <div class="reminder-info">
+            <div class="reminder-title">Оплатить интернет</div>
+            <div class="reminder-meta"><span>Завтра, 12:00</span><span class="reminder-tag"><span class="dot dot-personal"></span> Личное</span></div>
+          </div>
+          <svg class="reminder-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        </div>
+        <div class="reminder-item">
+          <input type="checkbox" class="reminder-check" />
+          <div class="reminder-info">
+            <div class="reminder-title">Купить продукты</div>
+            <div class="reminder-meta"><span>12 мая, 17:00</span><span class="reminder-tag"><span class="dot dot-personal"></span> Личное</span></div>
+          </div>
+          <svg class="reminder-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Mobile bottom nav -->
+  <nav class="mobile-nav">
+    <div class="mobile-nav-inner">
+      <a href="index.html" class="mobile-nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="3"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Календарь
+      </a>
+      <a href="#" class="mobile-nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/></svg>
+        События
+      </a>
+      <a href="napominaniya.html" class="mobile-nav-item active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        Напоминания
+      </a>
+      <a href="nastrojki.html" class="mobile-nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        Настройки
+      </a>
+    </div>
+  </nav>
+
+  <script>
+    // Apply saved theme
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+
+    function switchTab(el, id) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      el.classList.add('active');
+      document.querySelectorAll('.reminder-section').forEach(s => s.style.display = 'none');
+      document.getElementById(id).style.display = 'flex';
+      document.getElementById(id).style.flexDirection = 'column';
+    }
+  </script>
+</body>
+</html>
