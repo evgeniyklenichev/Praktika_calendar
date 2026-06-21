@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+{% set active_page = "calendar" %}
+
+{% block title %}Календарь{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/calendar.css">
+{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+    <div class="page-title">Мой календарь</div>
+    <div style="display:flex; align-items:center; gap:10px;">
+        <div class="view-tabs">
+            <a href="/calendar?year={{ year }}&month={{ month }}&day={{ selected_day.day }}&view=day" class="view-tab {% if view == 'day' %}active{% endif %}">День</a>
+            <a href="/calendar?year={{ year }}&month={{ month }}&day={{ selected_day.day }}&view=week" class="view-tab {% if view == 'week' %}active{% endif %}">Неделя</a>
+            <a href="/calendar?year={{ year }}&month={{ month }}&view=month" class="view-tab {% if view == 'month' or not view %}active{% endif %}">Месяц</a>
+        </div>
+        <a href="/events/new" class="btn btn-primary" style="display:none;" id="desktop-add-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            Добавить событие
+        </a>
+    </div>
+</div>
+
+<div class="cal-header">
+    <div class="cal-nav">
+        <a href="/calendar?year={{ prev_year }}&month={{ prev_month }}&view={{ view }}" class="cal-nav-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        </a>
+        <div class="cal-title">{{ month_name }} {{ year }}</div>
+        <a href="/calendar?year={{ next_year }}&month={{ next_month }}&view={{ view }}" class="cal-nav-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </a>
+    </div>
+    <a href="/calendar?view={{ view }}" class="cal-today-btn">Сегодня</a>
+</div>
+
+{% if view == "month" or not view %}
+<div class="cal-grid-wrap">
+    <div class="cal-weekdays">
+        <div class="cal-weekday">Пн</div>
+        <div class="cal-weekday">Вт</div>
+        <div class="cal-weekday">Ср</div>
+        <div class="cal-weekday">Чт</div>
+        <div class="cal-weekday">Пт</div>
+        <div class="cal-weekday">Сб</div>
+        <div class="cal-weekday">Вс</div>
+    </div>
+    <div class="cal-grid">
+        {% for i in range(start_offset) %}
+        <div class="cal-cell empty"></div>
+        {% endfor %}
+        {% for day in range(1, days_in_month + 1) %}
+        {% set is_today = (today.year == year and today.month == month and today.day == day) %}
+        {% set is_selected = (selected_day.year == year and selected_day.month == month and selected_day.day == day and view != 'month') %}
+        <a href="/calendar?year={{ year }}&month={{ month }}&view=day&day={{ day }}" class="cal-cell {% if is_today %}today{% endif %} {% if is_selected %}selected{% endif %}" style="text-decoration:none; color:inherit; display:block;">
+            <div class="cal-cell-num">{{ day }}</div>
+            {% if events_by_day.get(day) %}
+                {% for ev in events_by_day.get(day)[:3] %}
+                <div class="cal-event-pill" style="background:{{ ev.color }};">
+                    {% if ev.emoji %}{{ ev.emoji }}{% endif %} {{ ev.title }}
+                </div>
+                <div class="cal-event-dot" style="background:{{ ev.color }}; display:none;"></div>
+                {% endfor %}
+            {% endif %}
+        </a>
+        {% endfor %}
+    </div>
+</div>
+
+{% set panel_day = selected_day.day if (selected_day.month == month and selected_day.year == year) else None %}
+{% if panel_day and events_by_day.get(panel_day) %}
+<div class="day-panel">
+    <div class="day-panel-title">События на {{ panel_day }} {{ month_name|lower }}</div>
+    {% for ev in events_by_day.get(panel_day) %}
+    <a href="/events/{{ ev.id }}/edit" class="day-event-item">
+        <div class="day-event-dot" style="background:{{ ev.color }};"></div>
+        <div>
+            <div class="day-event-title">{% if ev.emoji %}{{ ev.emoji }} {% endif %}{{ ev.title }}</div>
+            <div class="day-event-time">{{ ev.time_start }}{% if ev.time_end %} — {{ ev.time_end }}{% endif %}</div>
+        </div>
+    </a>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% elif view == "week" %}
+<div class="week-view">
+    {% for wd in week_events %}
+    <div class="week-day-col">
+        <div class="week-day-label">{{ wd.weekday_label }}</div>
+        {% if wd.events %}
+            {% for ev in wd.events %}
+            <a href="/events/{{ ev.id }}/edit" class="day-event-item">
+                <div class="day-event-dot" style="background:{{ ev.color }};"></div>
+                <div>
+                    <div class="day-event-title">{% if ev.emoji %}{{ ev.emoji }} {% endif %}{{ ev.title }}</div>
+                    <div class="day-event-time">{{ ev.time_start }}{% if ev.time_end %} — {{ ev.time_end }}{% endif %}</div>
+                </div>
+            </a>
+            {% endfor %}
+        {% else %}
+            <div style="color:var(--text-muted); font-size:0.875rem; padding:6px 0;">Нет событий</div>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+
+{% elif view == "day" %}
+<div class="day-panel">
+    <div class="day-panel-title" style="display:flex; align-items:center; justify-content:space-between;">
+        <span>События на {{ selected_day.strftime('%d.%m.%Y') }}</span>
+        <a href="/events/new?date={{ selected_day.strftime('%Y-%m-%d') }}" class="btn btn-secondary" style="padding:6px 14px; font-size:0.8125rem;">+ Добавить</a>
+    </div>
+    {% if day_events %}
+        {% for ev in day_events %}
+        <a href="/events/{{ ev.id }}/edit" class="day-event-item">
+            <div class="day-event-dot" style="background:{{ ev.color }};"></div>
+            <div>
+                <div class="day-event-title">{% if ev.emoji %}{{ ev.emoji }} {% endif %}{{ ev.title }}</div>
+                <div class="day-event-time">{{ ev.time_start }}{% if ev.time_end %} — {{ ev.time_end }}{% endif %}</div>
+            </div>
+        </a>
+        {% endfor %}
+    {% else %}
+        <div style="color:var(--text-muted); font-size:0.9375rem; padding:12px 0;">На этот день событий нет.</div>
+    {% endif %}
+</div>
+{% endif %}
+
+<a href="/events/new" class="fab">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+</a>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Показываем кнопку "Добавить событие" только на десктопе
+    if (window.innerWidth > 768) {
+        document.getElementById('desktop-add-btn').style.display = 'inline-flex';
+    }
+</script>
+{% endblock %}

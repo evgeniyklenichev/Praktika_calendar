@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+{% set active_page = "events" %}
+
+{% block title %}{% if event %}Редактировать событие{% else %}Новое событие{% endif %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/events.css">
+{% endblock %}
+
+{% block content %}
+
+<div class="form-back-row">
+    <a href="/events" class="form-back-btn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+    </a>
+    <div class="form-page-title">{% if event %}Событие{% else %}Новое событие{% endif %}</div>
+</div>
+
+<form method="post" action="{% if event %}/events/{{ event.id }}/edit{% else %}/events/new{% endif %}" id="event-form">
+    <div class="event-form-page">
+        <div class="form-card">
+
+            <div class="form-group">
+                <label class="form-label">Название события</label>
+                <input type="text" name="title" placeholder="Например, встреча с командой" value="{{ event.title if event else '' }}" required>
+            </div>
+
+            <div class="form-row-2">
+                <div class="form-group">
+                    <label class="form-label">Дата</label>
+                    <input type="date" name="date" value="{{ event.date if event else prefill_date }}" required>
+                </div>
+                <div></div>
+            </div>
+
+            <div class="form-row-2">
+                <div class="form-group">
+                    <label class="form-label">Время начала</label>
+                    <input type="time" name="time_start" value="{{ event.time_start if event else '' }}">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Время окончания</label>
+                    <input type="time" name="time_end" value="{{ event.time_end if event else '' }}">
+                </div>
+            </div>
+
+            <div class="form-row-2">
+                <div class="form-group">
+                    <label class="form-label">Повторение</label>
+                    <select name="repeat">
+                        {% set r = event.repeat if event else 'none' %}
+                        <option value="none" {% if r == 'none' %}selected{% endif %}>Никогда</option>
+                        <option value="daily" {% if r == 'daily' %}selected{% endif %}>Каждый день</option>
+                        <option value="weekly" {% if r == 'weekly' %}selected{% endif %}>Каждую неделю</option>
+                        <option value="monthly" {% if r == 'monthly' %}selected{% endif %}>Каждый месяц</option>
+                        <option value="yearly" {% if r == 'yearly' %}selected{% endif %}>Каждый год</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Напоминание</label>
+                    <select name="reminder">
+                        {% set rem = event.reminder if event else 'none' %}
+                        <option value="none" {% if rem == 'none' %}selected{% endif %}>Без напоминания</option>
+                        <option value="10min" {% if rem == '10min' %}selected{% endif %}>За 10 минут</option>
+                        <option value="30min" {% if rem == '30min' %}selected{% endif %}>За 30 минут</option>
+                        <option value="1hour" {% if rem == '1hour' %}selected{% endif %}>За 1 час</option>
+                        <option value="1day" {% if rem == '1day' %}selected{% endif %}>За 1 день</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Описание</label>
+                <textarea name="description" rows="3" placeholder="Дополнительные детали...">{{ event.description if event else '' }}</textarea>
+            </div>
+
+            <div class="form-group color-emoji-row">
+                <div class="color-picker-group">
+                    <label class="form-label">Цвет события</label>
+                    <div class="color-swatches" id="color-swatches">
+                        {% set current_color = event.color if event else '#7C5CBF' %}
+                        {% for c in ['#7C5CBF', '#22C55E', '#3B82F6', '#F59E0B', '#EF4444', '#EC4899', '#06B6D4', '#84CC16'] %}
+                        <div class="color-swatch {% if current_color == c %}selected{% endif %}" style="background:{{ c }};" data-color="{{ c }}" onclick="selectColor('{{ c }}')"></div>
+                        {% endfor %}
+                        <div class="color-swatch" style="background: conic-gradient(red, yellow, lime, cyan, blue, magenta, red);" id="custom-color-swatch">
+                            <input type="color" id="custom-color-input" onchange="selectColor(this.value)">
+                        </div>
+                    </div>
+                    <input type="hidden" name="color" id="color-input" value="{{ current_color }}">
+                </div>
+
+                <div class="emoji-picker-group">
+                    <label class="form-label">Смайлик (необязательно)</label>
+                    <div class="emoji-grid" id="emoji-grid">
+                        {% set current_emoji = event.emoji if event else '' %}
+                        {% for e in ['📅', '💼', '🎉', '🏋️', '🍽️', '✈️', '📚', '❤️', '🎂', '💡', '🎵', '⚽'] %}
+                        <div class="emoji-btn {% if current_emoji == e %}selected{% endif %}" data-emoji="{{ e }}" onclick="selectEmoji('{{ e }}')">{{ e }}</div>
+                        {% endfor %}
+                    </div>
+                    <input type="hidden" name="emoji" id="emoji-input" value="{{ current_emoji }}">
+                </div>
+            </div>
+
+            {% if event %}
+            <button type="button" class="delete-event-btn" onclick="document.getElementById('delete-form').submit();">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                Удалить событие
+            </button>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="form-actions-row">
+        <a href="/events" class="btn btn-secondary">Отмена</a>
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+    </div>
+</form>
+
+{% if event %}
+<form id="delete-form" method="post" action="/events/{{ event.id }}/delete" style="display:none;"></form>
+{% endif %}
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function selectColor(color) {
+    document.getElementById('color-input').value = color;
+    document.querySelectorAll('.color-swatch[data-color]').forEach(el => {
+        el.classList.toggle('selected', el.dataset.color === color);
+    });
+}
+
+function selectEmoji(emoji) {
+    const input = document.getElementById('emoji-input');
+    // Toggle off if clicking the same emoji again
+    if (input.value === emoji) {
+        input.value = '';
+    } else {
+        input.value = emoji;
+    }
+    document.querySelectorAll('.emoji-btn').forEach(el => {
+        el.classList.toggle('selected', el.dataset.emoji === input.value);
+    });
+}
+</script>
+{% endblock %}
