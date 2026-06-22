@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% set active_page = "reminders" %}
+
+{% block title %}{% if reminder %}Редактировать напоминание{% else %}Новое напоминание{% endif %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/reminders.css">
+<link rel="stylesheet" href="/static/css/events.css">
+{% endblock %}
+
+{% block content %}
+
+<div class="form-back-row">
+    <a href="/reminders" class="form-back-btn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+    </a>
+    <div class="form-page-title">{% if reminder %}Напоминание{% else %}Новое напоминание{% endif %}</div>
+</div>
+
+<form method="post" action="{% if reminder %}/reminders/{{ reminder.id }}/edit{% else %}/reminders/new{% endif %}">
+    <div class="reminder-form-page">
+        <div class="form-card">
+
+            <div class="form-group">
+                <label class="form-label">Название напоминания</label>
+                <input type="text" name="title" placeholder="Например, оплатить интернет" value="{{ reminder.title if reminder else '' }}" required>
+            </div>
+
+            <div class="form-row-2">
+                <div class="form-group">
+                    <label class="form-label">Дата и время</label>
+                    <input type="datetime-local" name="datetime" value="{{ reminder.datetime if reminder else '' }}" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Категория</label>
+                    <select name="category">
+                        {% set cat = reminder.category if reminder else 'Личное' %}
+                        <option value="Личное" {% if cat == 'Личное' %}selected{% endif %}>Личное</option>
+                        <option value="Работа" {% if cat == 'Работа' %}selected{% endif %}>Работа</option>
+                        <option value="Учёба" {% if cat == 'Учёба' %}selected{% endif %}>Учёба</option>
+                        <option value="Здоровье" {% if cat == 'Здоровье' %}selected{% endif %}>Здоровье</option>
+                        <option value="Финансы" {% if cat == 'Финансы' %}selected{% endif %}>Финансы</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group color-emoji-row">
+                <div class="color-picker-group">
+                    <label class="form-label">Цвет напоминания</label>
+                    <div class="color-swatches" id="color-swatches">
+                        {% set current_color = reminder.color if reminder else '#22C55E' %}
+                        {% for c in ['#22C55E', '#7C5CBF', '#3B82F6', '#F59E0B', '#EF4444', '#EC4899', '#06B6D4', '#84CC16'] %}
+                        <div class="color-swatch {% if current_color == c %}selected{% endif %}" style="background:{{ c }};" data-color="{{ c }}" onclick="selectColor('{{ c }}')"></div>
+                        {% endfor %}
+                        <div class="color-swatch" style="background: conic-gradient(red, yellow, lime, cyan, blue, magenta, red);" id="custom-color-swatch">
+                            <input type="color" id="custom-color-input" onchange="selectColor(this.value)">
+                        </div>
+                    </div>
+                    <input type="hidden" name="color" id="color-input" value="{{ current_color }}">
+                </div>
+
+                <div class="emoji-picker-group">
+                    <label class="form-label">Смайлик (необязательно)</label>
+                    <div class="emoji-grid" id="emoji-grid">
+                        {% set current_emoji = reminder.emoji if reminder else '' %}
+                        {% for e in ['🔔', '💰', '🏥', '📞', '🛒', '📝', '🚗', '🏠', '💊', '📦', '🎓', '⏰'] %}
+                        <div class="emoji-btn {% if current_emoji == e %}selected{% endif %}" data-emoji="{{ e }}" onclick="selectEmoji('{{ e }}')">{{ e }}</div>
+                        {% endfor %}
+                    </div>
+                    <input type="hidden" name="emoji" id="emoji-input" value="{{ current_emoji }}">
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="form-actions-row">
+        <a href="/reminders" class="btn btn-secondary">Отмена</a>
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+    </div>
+</form>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function selectColor(color) {
+    document.getElementById('color-input').value = color;
+    document.querySelectorAll('.color-swatch[data-color]').forEach(el => {
+        el.classList.toggle('selected', el.dataset.color === color);
+    });
+}
+
+function selectEmoji(emoji) {
+    const input = document.getElementById('emoji-input');
+    if (input.value === emoji) {
+        input.value = '';
+    } else {
+        input.value = emoji;
+    }
+    document.querySelectorAll('.emoji-btn').forEach(el => {
+        el.classList.toggle('selected', el.dataset.emoji === input.value);
+    });
+}
+</script>
+{% endblock %}

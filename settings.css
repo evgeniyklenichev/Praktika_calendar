@@ -1,0 +1,120 @@
+/* settings.css — Студент 2: Страница Настройки */
+
+.settings-page {
+    padding: 20px 28px 40px;
+    max-width: 640px;
+}
+
+.settings-section {
+    margin-bottom: 28px;
+}
+
+.settings-section-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+}
+
+.settings-card {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+
+.settings-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    gap: 16px;
+    border-bottom: 1.5px solid var(--border);
+    flex-wrap: wrap;
+}
+
+.settings-row:last-child { border-bottom: none; }
+
+.settings-row-label {
+    font-size: 0.9375rem;
+    color: var(--text-primary);
+    font-weight: 500;
+    flex-shrink: 0;
+}
+
+.settings-row-control {
+    flex-shrink: 0;
+    min-width: 180px;
+}
+
+.settings-row-control select {
+    padding: 8px 12px;
+    font-size: 0.875rem;
+    min-width: 160px;
+}
+
+/* Theme selector */
+.theme-selector {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.theme-btn {
+    padding: 8px 20px;
+    border-radius: var(--radius-sm);
+    font-size: 0.875rem;
+    font-weight: 500;
+    border: 1.5px solid var(--border);
+    background: var(--btn-secondary-bg);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all var(--transition);
+}
+
+.theme-btn:hover { border-color: var(--purple); color: var(--purple); }
+
+.theme-btn.active {
+    background: var(--purple);
+    color: #fff;
+    border-color: var(--purple);
+    font-weight: 600;
+}
+
+/* Save toast */
+.settings-toast {
+    position: fixed;
+    bottom: 90px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: #22C55E;
+    color: #fff;
+    padding: 10px 22px;
+    border-radius: 999px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    opacity: 0;
+    transition: all 0.3s ease;
+    z-index: 999;
+    white-space: nowrap;
+    pointer-events: none;
+}
+
+.settings-toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* Save button row */
+.settings-save-row {
+    padding: 8px 0 0;
+}
+
+@media (max-width: 768px) {
+    .settings-page { padding: 12px 12px 40px; }
+    .settings-row { flex-direction: column; align-items: flex-start; gap: 8px; }
+    .settings-row-control { width: 100%; }
+    .settings-row-control select { width: 100%; }
+    .theme-selector { width: 100%; }
+    .theme-btn { flex: 1; text-align: center; padding: 8px 10px; }
+}

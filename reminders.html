@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% set active_page = "reminders" %}
+
+{% block title %}Напоминания{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/reminders.css">
+{% endblock %}
+
+{% block content %}
+
+<div class="reminders-header">
+    <div class="page-title">Напоминания</div>
+    <a href="/reminders/new" class="btn btn-primary" id="desktop-add-btn" style="display:none;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+        Добавить напоминание
+    </a>
+</div>
+
+<div class="filter-tabs">
+    <a href="/reminders?filter=upcoming" class="filter-tab {% if filter == 'upcoming' %}active{% endif %}">
+        Предстоящие
+        {% if filter == 'upcoming' %}<span class="filter-count">{{ reminders|length }}</span>{% endif %}
+    </a>
+    <a href="/reminders?filter=done" class="filter-tab {% if filter == 'done' %}active{% endif %}">Выполненные</a>
+    <a href="/reminders?filter=all" class="filter-tab {% if filter == 'all' %}active{% endif %}">Все</a>
+</div>
+
+<div class="reminders-list">
+    {% if reminders %}
+        {% for r in reminders %}
+        <div class="reminder-item {% if r.is_done %}done{% endif %}">
+            <form class="reminder-check-form" method="post" action="/reminders/{{ r.id }}/toggle">
+                <button type="submit" class="reminder-checkbox" title="Отметить выполненным">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                </button>
+            </form>
+
+            {% if r.emoji %}<div class="reminder-emoji">{{ r.emoji }}</div>{% endif %}
+
+            <div class="reminder-info">
+                <div class="reminder-title">{{ r.title }}</div>
+                <div class="reminder-meta">
+                    <span>{{ r.datetime }}</span>
+                    <span style="display:flex; align-items:center; gap:5px;">
+                        <span class="reminder-category-dot" style="background:{{ r.color }};"></span>
+                        {{ r.category }}
+                    </span>
+                </div>
+            </div>
+
+            <div class="reminder-actions">
+                <a href="/reminders/{{ r.id }}/edit" class="reminder-action-btn" title="Редактировать">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path></svg>
+                </a>
+                <form method="post" action="/reminders/{{ r.id }}/delete" onsubmit="return confirm('Удалить это напоминание?');">
+                    <button type="submit" class="reminder-action-btn delete" title="Удалить">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                    </button>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="reminders-empty">
+            <div class="reminders-empty-icon">🔔</div>
+            <div class="reminders-empty-text">
+                {% if filter == 'done' %}Нет выполненных напоминаний.{% else %}Напоминаний пока нет. Нажмите «+», чтобы добавить.{% endif %}
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<a href="/reminders/new" class="fab">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+</a>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    if (window.innerWidth > 768) {
+        document.getElementById('desktop-add-btn').style.display = 'inline-flex';
+    }
+</script>
+{% endblock %}

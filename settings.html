@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% set active_page = "settings" %}
+
+{% block title %}Настройки{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/settings.css">
+{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+    <div class="page-title">Настройки</div>
+</div>
+
+<form method="post" action="/settings" class="settings-page">
+
+    <div class="settings-section">
+        <div class="settings-section-title">Общие</div>
+        <div class="settings-card">
+            <div class="settings-row">
+                <div class="settings-row-label">Первый день недели</div>
+                <div class="settings-row-control">
+                    <select name="first_day">
+                        <option value="monday" {% if settings.first_day == 'monday' %}selected{% endif %}>Понедельник</option>
+                        <option value="sunday" {% if settings.first_day == 'sunday' %}selected{% endif %}>Воскресенье</option>
+                    </select>
+                </div>
+            </div>
+            <div class="settings-row">
+                <div class="settings-row-label">Часовой пояс</div>
+                <div class="settings-row-control">
+                    <select name="timezone">
+                        {% set tz = settings.timezone %}
+                        <option value="UTC+02:00" {% if tz == 'UTC+02:00' %}selected{% endif %}>(UTC+02:00) Калининград</option>
+                        <option value="UTC+03:00" {% if tz == 'UTC+03:00' %}selected{% endif %}>(UTC+03:00) Москва</option>
+                        <option value="UTC+04:00" {% if tz == 'UTC+04:00' %}selected{% endif %}>(UTC+04:00) Самара</option>
+                        <option value="UTC+05:00" {% if tz == 'UTC+05:00' %}selected{% endif %}>(UTC+05:00) Екатеринбург</option>
+                        <option value="UTC+07:00" {% if tz == 'UTC+07:00' %}selected{% endif %}>(UTC+07:00) Новосибирск</option>
+                        <option value="UTC+10:00" {% if tz == 'UTC+10:00' %}selected{% endif %}>(UTC+10:00) Владивосток</option>
+                    </select>
+                </div>
+            </div>
+            <div class="settings-row">
+                <div class="settings-row-label">Формат времени</div>
+                <div class="settings-row-control">
+                    <select name="time_format">
+                        <option value="24" {% if settings.time_format == '24' %}selected{% endif %}>24-часовой</option>
+                        <option value="12" {% if settings.time_format == '12' %}selected{% endif %}>12-часовой</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="settings-section">
+        <div class="settings-section-title">Уведомления</div>
+        <div class="settings-card">
+            <div class="settings-row">
+                <div class="settings-row-label">Уведомления о событиях</div>
+                <div class="settings-row-control">
+                    <select name="event_reminder">
+                        {% set er = settings.event_reminder %}
+                        <option value="none" {% if er == 'none' %}selected{% endif %}>Не уведомлять</option>
+                        <option value="10min" {% if er == '10min' %}selected{% endif %}>За 10 минут до начала</option>
+                        <option value="30min" {% if er == '30min' %}selected{% endif %}>За 30 минут до начала</option>
+                        <option value="1hour" {% if er == '1hour' %}selected{% endif %}>За 1 час до начала</option>
+                    </select>
+                </div>
+            </div>
+            <div class="settings-row">
+                <div class="settings-row-label">Уведомления о напоминаниях</div>
+                <div class="settings-row-control">
+                    <select name="reminder_notify">
+                        {% set rn = settings.reminder_notify %}
+                        <option value="attime" {% if rn == 'attime' %}selected{% endif %}>В момент времени</option>
+                        <option value="10min" {% if rn == '10min' %}selected{% endif %}>За 10 минут</option>
+                        <option value="1hour" {% if rn == '1hour' %}selected{% endif %}>За 1 час</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="settings-section">
+        <div class="settings-section-title">Внешний вид</div>
+        <div class="settings-card">
+            <div class="settings-row">
+                <div class="settings-row-label">Тема</div>
+                <div class="settings-row-control">
+                    <div class="theme-selector">
+                        <button type="button" class="theme-btn {% if settings.theme == 'light' %}active{% endif %}" data-theme-value="light" onclick="selectTheme('light')">Светлая</button>
+                        <button type="button" class="theme-btn {% if settings.theme == 'dark' %}active{% endif %}" data-theme-value="dark" onclick="selectTheme('dark')">Тёмная</button>
+                        <button type="button" class="theme-btn {% if settings.theme == 'system' %}active{% endif %}" data-theme-value="system" onclick="selectTheme('system')">Системная</button>
+                    </div>
+                    <input type="hidden" name="theme" id="theme-input" value="{{ settings.theme }}">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="settings-save-row">
+        <button type="submit" class="btn btn-primary">Сохранить настройки</button>
+    </div>
+
+</form>
+
+<div class="settings-toast" id="save-toast">Настройки сохранены</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function selectTheme(value) {
+    document.getElementById('theme-input').value = value;
+    document.querySelectorAll('.theme-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.themeValue === value);
+    });
+
+    // Live preview
+    let applied = value;
+    if (value === 'system') {
+        applied = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    document.documentElement.setAttribute('data-theme', applied);
+    document.body.setAttribute('data-theme', applied);
+}
+
+// Показать тост, если настройки только что сохранены (?saved=1)
+if (window.location.search.includes('saved=1')) {
+    const toast = document.getElementById('save-toast');
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2200);
+}
+</script>
+{% endblock %}
